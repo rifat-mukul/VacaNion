@@ -1,16 +1,23 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Vacanion</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
 <body>
-    {% csrf_token%}
-    <h1>This is index | home</h1>
-    <br>
-    <a href="signup">Sign Up</a>
-    <a href="signin">Sign In</a>
-
+    <div class="container">
+            <h1>VacaNion</h1>
+            <h3>A place to manage all your vacation with ease</h3>
+            <form action="" method="POST">
+                {% csrf_token %}
+				<button type="button"><a href="{% url 'signup' %}">Sign Up</a></button>
+				<br>
+				<br>
+				<button type="button"><a href="{% url 'signin' %}">Sign In</a></button>
+        </div>
+    </div>
 </body>
 </html>
