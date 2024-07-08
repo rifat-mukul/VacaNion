@@ -2,12 +2,17 @@ from django.shortcuts import render,redirect
 from .models import CustomUser
 from django.contrib import messages
 from django.contrib.auth import login,get_user_model,authenticate
+from django.contrib.auth.decorators import login_required
+
 
 
 # Create your views here.
+@login_required(login_url='signin')
 def index(request):
     return render(request,'index.html')
 
+
+@login_required(login_url='signin')
 def tours(request):
     return render(request,'tours.html')
 
@@ -51,11 +56,14 @@ def signin(request):
         email = request.POST["email"]
         password = request.POST["password"]
 
-        # if CustomUser.objects.filter(email = email).exists():
-        #     user = authenticate(request,email=email,password=password)
-        # else:
-        #     user = None
         user = authenticate(request,email = email,password = password)
+
+        if CustomUser.objects.filter(username = email).exists():
+            usr =  CustomUser.objects.get(username = email)
+            access = usr.email
+            user = authenticate(request,email=access,password=password)
+        else:
+            user = None
         
                 
         if user is not None:
@@ -67,3 +75,8 @@ def signin(request):
             
     else:
         return render(request,'signin.html')
+    
+@login_required(login_url='signin')
+def signout(request):
+    request.session.flush()
+    return redirect(signin)
