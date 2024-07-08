@@ -61,7 +61,7 @@ def signin(request):
             return redirect('/')
         else:
             messages.info(request,"Credintial invalid")
-            return redirect('signin')
+            return redirect(index)
             
     else:
         return render(request,'signin.html')
