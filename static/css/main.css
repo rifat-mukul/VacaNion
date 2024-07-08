@@ -17,6 +17,15 @@ body {
     border-radius: 8px;
 }
 
+.container-tour {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
 .signin-form {
     width: 100%;
 }
@@ -59,3 +68,114 @@ button {
 button:hover {
     background-color: #45a049;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.button-beautiful {
+  background-color: #e74c3c;  /* Warm orange color */
+  color: white;
+  padding: 12px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: bold; /* Add some weight for emphasis */
+  margin: 10px;  /* Adjust margin as needed */
+  border: none;
+  border-radius: 4px;  /* Slight rounded corners */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);  /* Subtle shadow */
+  cursor: pointer;
+  transition: 0.3s ease all; /* Smooth transition effects */
+  
+  /* Add a gradient for a more dynamic look */
+  background-image: linear-gradient(to right, #e74c3c 0%, #c0291b 100%);
+  
+  /* Add hover effect with color change and slight transform */
+  &:hover {
+    background-image: linear-gradient(to right, #c0291b 0%, #e74c3c 100%);
+    transform: translateY(-1px);  /* Slight upward movement on hover */
+  }
+}
+
+
+
+.search-container {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+    font-size: 16px;
+    border-right: none;
+}
+
+.search-button {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 0 4px 4px 0;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #45a049;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+

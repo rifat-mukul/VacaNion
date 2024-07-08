@@ -8,6 +8,8 @@ from django.contrib.auth import login,get_user_model,authenticate
 def index(request):
     return render(request,'index.html')
 
+def tours(request):
+    return render(request,'tours.html')
 
 def signup(request):
     if request.method == "POST":
