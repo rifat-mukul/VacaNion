@@ -60,10 +60,10 @@ def signin(request):
                 
         if user is not None:
             login(request,user)
-            return redirect('/')
+            return redirect(tours)
         else:
             messages.info(request,"Credintial invalid")
-            return redirect(index)
+            return redirect(signin)
             
     else:
         return render(request,'signin.html')
