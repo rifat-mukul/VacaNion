@@ -53,26 +53,38 @@ def signup(request):
 
 def signin(request):
     if request.method == "POST":
-        email = request.POST["email"]
-        password = request.POST["password"]
+        email = request.POST['email']
+        password = request.POST['password']
 
-        user = authenticate(request,email = email,password = password)
+        # user = authenticate(request,email=email,password=password)
 
-        if CustomUser.objects.filter(username = email).exists():
-            usr =  CustomUser.objects.get(username = email)
-            access = usr.email
-            user = authenticate(request,email=access,password=password)
+
+
+        if "@" in email:
+            user = authenticate(request,email=email,password=password)
         else:
-            user = None
-        
-                
+            if CustomUser.objects.filter(user_name = email).exists():
+
+                user_obj = CustomUser.objects.filter(user_name = email)
+                for user in user_obj:
+                    access = user.email
+
+                user = authenticate(request,email = access,password=password)
+                print(user)
+            else:
+                user = None
+            
+
+
+
+
+
         if user is not None:
             login(request,user)
-            return redirect(tours)
+            return redirect('/')
         else:
-            messages.info(request,"Credintial invalid")
-            return redirect(signin)
-            
+            messages.info(request, 'Credential Invalid')
+            return redirect('signin')
     else:
         return render(request,'signin.html')
     
@@ -80,3 +92,7 @@ def signin(request):
 def signout(request):
     request.session.flush()
     return redirect(signin)
+
+@login_required(login_url='signin')
+def profile(request):
+    return render(request,'profile.html')

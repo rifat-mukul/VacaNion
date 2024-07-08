@@ -89,8 +89,8 @@ DATABASES = {
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTHENTICATION_BACKENDS = [
-    'core.backends.EmailBackend'
-    # 'django.contrib.auth.backends.ModelBackend',
+    'core.backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 AUTH_PASSWORD_VALIDATORS = [
