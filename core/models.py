@@ -26,3 +26,36 @@ class CustomUser(AbstractBaseUser,PermissionsMixin,models.Model):
 
     def __str__(self):
         return self.email 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# by mukul
+class Tour(models.Model):
+    destination = models.CharField(max_length=100)
+    duration = models.PositiveIntegerField()  # Example field, adjust as per your model
+    price = models.DecimalField(max_digits=8, decimal_places=2)  # Example field
+
+    def __str__(self):
+        return self.destination

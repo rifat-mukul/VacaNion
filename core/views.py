@@ -3,6 +3,7 @@ from .models import CustomUser
 from django.contrib import messages
 from django.contrib.auth import login,get_user_model,authenticate
 from django.contrib.auth.decorators import login_required
+from .models import Tour
 
 
 
@@ -86,7 +87,7 @@ def signin(request):
 
         if user is not None:
             login(request,user)
-            return redirect(tours)
+            return redirect(tour_list)
         else:
             messages.info(request, 'Credential Invalid')
             return redirect('signin')
@@ -116,3 +117,14 @@ def changepass(request):
         currentpass = request.POST['current-password']
         # user = CustomUser.objects.get(email = email)
     return render(request,'changepass.html')
+
+
+
+# by nukul
+@login_required
+def tour_list(request):
+    tours = Tour.objects.all()
+    context = {
+        'tours': tours
+    }
+    return render(request, 'tour_list.html', context)
