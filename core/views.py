@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import CustomUser
+from .models import CustomUser, Hotel
 from django.contrib import messages
 from django.contrib.auth import login,get_user_model,authenticate
 from django.contrib.auth.decorators import login_required
@@ -15,6 +15,38 @@ def index(request):
 @login_required(login_url='signin')
 def tours(request):
     return render(request,'tours.html')
+
+def addHotel(request):
+    if request.method == "POST":
+        name = request.POST['name']
+        place = request.POST['place']
+        price = request.POST['price']
+        review = request.POST['review']
+
+        info = {
+                'name' : name,
+                'price' : price,
+                'review' : review,
+                'place' : place
+                }
+        
+        review = int(review)
+        price = int(price)
+
+        if review > 10 or review < 0:
+            messages.info(request,"Bad reivew")
+            return render(request,'addHotel.html',info)
+        if price < 0:
+            messages.info(request,"Bad price")
+            return render(request,'addHotel.html',info)
+        if Hotel.objects.filter(name = name).exists():
+            messages.info(request,"Hotel name exists")
+            return render(request,'addHotel.html',info)
+        hotel = Hotel.objects.create(name = name,place = place,rating=review,price=price)
+        hotel.save()
+        return render(request,'addHotel.html',info)
+    else:
+        return render(request,'addHotel.html')
 
 def signup(request):
     if request.method == "POST":

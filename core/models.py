@@ -26,3 +26,12 @@ class CustomUser(AbstractBaseUser,PermissionsMixin,models.Model):
 
     def __str__(self):
         return self.email 
+
+class Hotel(models.Model):
+    place = models.CharField(max_length=20,blank=True,null=True)
+    name = models.CharField(max_length=20,blank=True,null=True)
+    price = models.IntegerField()
+    rating= models.IntegerField()
+    
+    def __str__(self):
+        return self.name
