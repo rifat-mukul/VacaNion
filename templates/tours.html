@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tours</title>
-    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+	<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tour-table.css' %}" />
   </head>
   <body>
     <div class="container">
@@ -25,8 +26,21 @@
             <label for="search">Search</label>
             <input type="search" id="search" name="search" value="{{email}}" />
           </div>
-          <button type="submit">Sign Up</button>
+          <button type="submit">Search Up</button>
         </form>
+		  <table>
+			  <tr>
+				  <th>Name</th>
+				  <th>Price</th>
+				  <th>Place</th>
+			  </tr>
+		  {% for hotel in hotels %}
+		  <tr>
+                <td>{{ hotel.name }}</td>
+                <td>{{ hotel.price }}</td>
+                <td>{{ hotel.place }}</td>
+			</tr>
+        {% endfor %}
       </div>
     </div>
   </body>

@@ -3,6 +3,7 @@ from .models import CustomUser, Hotel
 from django.contrib import messages
 from django.contrib.auth import login,get_user_model,authenticate
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 
 
@@ -14,7 +15,15 @@ def index(request):
 
 @login_required(login_url='signin')
 def tours(request):
-    return render(request,'tours.html')
+    if request.method == "POST":
+        search = request.POST['search']
+        if search == '':
+            data = Hotel.objects.all()
+        else:
+            data = Hotel.objects.filter(Q(name__icontains=search)|Q(place__icontains=search))
+    else:
+        data = Hotel.objects.all()
+    return render(request,'tours.html',{'hotels':data})
 
 def addHotel(request):
     if request.method == "POST":
