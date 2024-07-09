@@ -1,0 +1,34 @@
+/* Base styles for tables */
+table {
+  width: 100%;
+  border-collapse: collapse; /* Ensures borders collapse into single lines */
+  margin: 20px auto;  /* Optional: Adds margin for better placement */
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #ddd; /* Light gray border */
+  text-align: left; /* Left-align content by default */
+}
+
+th {
+  background-color: #f2f2f2; /* Light gray background for headers */
+  font-weight: bold;
+}
+
+/* Zebra striping (optional) */
+tr:nth-child(even) {
+  background-color: #f9f9f9; /* Light background for even rows */
+}
+
+/* Responsive design (optional) */
+@media (max-width: 768px) {
+  table {
+    /* Adjust table styles for smaller screens */
+  }
+  
+  th, td {
+    /* Adjust cell styles for smaller screens (e.g., reduce padding) */
+  }
+}
+
