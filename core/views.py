@@ -23,24 +23,29 @@ def signup(request):
         password1 = request.POST['password1']
         password2 = request.POST['password2']
 
-        # info  = {
-        #     "email":email,
-        #     'username': username,
-        #     'password':password1
-        # }
+        info  = {
+            "email":email,
+            'username': username,
+            'password':password1,
+            'password2':password2
+        }
 
         if password1 != password2:
             messages.info(request,"Password do not match")
         
-            return render(request,'signup.html')#,info)
+            return render(request,'signup.html',info)
         elif len(password1) <8:
             messages.info(request,"password should contain at least 8 character")
 
-            return render(request,'signup.html')#,info)
+            return render(request,'signup.html',info)
         
         else:
             if CustomUser.objects.filter(email = email).exists():
                 messages.info(request,'User email already exists')
+                return redirect('signup')
+            if CustomUser.objects.filter(username = username):
+
+                messages.info(request,'Username already exists')
                 return redirect('signup')
             user = CustomUser.objects.create(email = email,username=username,password = password1)
             user.set_password(password1)
@@ -63,9 +68,9 @@ def signin(request):
         if "@" in email:
             user = authenticate(request,email=email,password=password)
         else:
-            if CustomUser.objects.filter(user_name = email).exists():
+            if CustomUser.objects.filter(username = email).exists():
 
-                user_obj = CustomUser.objects.filter(user_name = email)
+                user_obj = CustomUser.objects.filter(username = email)
                 for user in user_obj:
                     access = user.email
 
@@ -81,7 +86,7 @@ def signin(request):
 
         if user is not None:
             login(request,user)
-            return redirect('/')
+            return redirect(tours)
         else:
             messages.info(request, 'Credential Invalid')
             return redirect('signin')
@@ -95,4 +100,19 @@ def signout(request):
 
 @login_required(login_url='signin')
 def profile(request):
+    if request.method == "POST":
+        fname = request.POST["first-name"]
+        lname = request.POST["last-name"]
+        username = request.POST["username"]
+        password = request.POST["password"]
+
+
+
     return render(request,'profile.html')
+
+
+def changepass(request):
+    if request.method == "POST":
+        currentpass = request.POST['current-password']
+        # user = CustomUser.objects.get(email = email)
+    return render(request,'changepass.html')
