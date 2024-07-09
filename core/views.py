@@ -79,8 +79,7 @@ def signup(request):
 
                 messages.info(request,'Username already exists')
                 return redirect('signup')
-            user = CustomUser.objects.create(email = email,username=username,password = password1)
-            user.set_password(password1)
+            user = CustomUser.objects.create_user(email = email,username=username,password = password1)
             user.save()
 
             return redirect(index)
