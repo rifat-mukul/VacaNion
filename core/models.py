@@ -8,7 +8,7 @@ from datetime import datetime
 class CustomUser(AbstractBaseUser,PermissionsMixin,models.Model):
     email = models.EmailField(max_length=100,unique=True,primary_key = True)
     username = models.CharField(max_length=100,unique=True)
-    profileimg = models.ImageField(upload_to="profile_img",default="blank-profile-picture.png")
+    profileimg = models.ImageField(upload_to="profileimg",default="blank-profile-picture.png")
     password = models.CharField(max_length = 100)
     first_name = models.CharField(max_length=20,blank=True,null=True)
     last_name = models.CharField(max_length=20,blank=True,null=True)
@@ -32,6 +32,8 @@ class Hotel(models.Model):
     name = models.CharField(max_length=20,blank=True,null=True)
     price = models.IntegerField()
     rating= models.IntegerField()
+    hotelimg = models.ImageField(upload_to="hotelimg",default="blank-hotel-picture.png")
+
     
     def __str__(self):
         return self.name
