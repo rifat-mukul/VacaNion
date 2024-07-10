@@ -34,6 +34,12 @@ class Hotel(models.Model):
     rating= models.IntegerField()
     hotelimg = models.ImageField(upload_to="hotelimg",default="blank-hotel-picture.png")
 
-    
     def __str__(self):
         return self.name
+
+class Booked(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username + " -> " + self.hotel.name 

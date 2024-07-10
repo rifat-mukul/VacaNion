@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import CustomUser, Hotel
+from .models import CustomUser, Hotel, Booked
 from django.contrib import messages
 from django.contrib.auth import login,get_user_model,authenticate
 from django.contrib.auth.decorators import login_required
@@ -16,11 +16,23 @@ def index(request):
 @login_required(login_url='signin')
 def tours(request):
     if request.method == "POST":
-        search = request.POST['search']
-        if search == '':
+        if request.POST['bookit'] is not None:
+            name = request.POST['bookit']
+            hotel = Hotel.objects.get(name=name)
+            user = CustomUser.objects.get(email=request.user.email)
+            if Booked.objects.filter(user=user,hotel=hotel).exists():
+                messages.info(request,"Hotel already booked")
+                data = Hotel.objects.all()
+                return render(request,'tours.html',{'hotels':data})
+            book_entry = Booked.objects.create(hotel=hotel,user=user)
+            book_entry.save()
             data = Hotel.objects.all()
         else:
-            data = Hotel.objects.filter(Q(name__icontains=search)|Q(place__icontains=search))
+            search = request.POST['search']
+            if search == '':
+                data = Hotel.objects.all()
+            else:
+                data = Hotel.objects.filter(Q(name__icontains=search)|Q(place__icontains=search))
     else:
         data = Hotel.objects.all()
     return render(request,'tours.html',{'hotels':data})

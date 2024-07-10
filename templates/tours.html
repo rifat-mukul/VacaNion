@@ -10,7 +10,7 @@
   </head>
   <body>
     <div class="container">
-      <div class="signin-form">
+      <div class="search-form">
         <style>
             h5{
                 color: red;
@@ -28,19 +28,27 @@
           </div>
           <button type="submit">Search Up</button>
         </form>
+		<div class="table-container">
+			<form action="" method="POST" >
+          {% csrf_token %}
 		  <table>
 			  <tr>
 				  <th>Name</th>
 				  <th>Price</th>
 				  <th>Place</th>
+				  <th></th>
 			  </tr>
 		  {% for hotel in hotels %}
 		  <tr>
                 <td>{{ hotel.name }}</td>
                 <td>{{ hotel.price }}</td>
                 <td>{{ hotel.place }}</td>
+				<td><button name="bookit" value="{{hotel.name}}">Book</button></td>
 			</tr>
         {% endfor %}
+		  </table>
+			</form>
+		</div>
       </div>
     </div>
   </body>
