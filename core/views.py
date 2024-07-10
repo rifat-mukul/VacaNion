@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import login,get_user_model,authenticate
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+import datetime as dt
 
 
 
@@ -16,17 +17,11 @@ def index(request):
 @login_required(login_url='signin')
 def tours(request):
     if request.method == "POST":
+        print(request.POST)
         if request.POST['bookit'] is not None:
             name = request.POST['bookit']
-            hotel = Hotel.objects.get(name=name)
-            user = CustomUser.objects.get(email=request.user.email)
-            if Booked.objects.filter(user=user,hotel=hotel).exists():
-                messages.info(request,"Hotel already booked")
-                data = Hotel.objects.all()
-                return render(request,'tours.html',{'hotels':data})
-            book_entry = Booked.objects.create(hotel=hotel,user=user)
-            book_entry.save()
-            data = Hotel.objects.all()
+            print('to book')
+            return redirect('book',name)
         else:
             search = request.POST['search']
             if search == '':
@@ -36,6 +31,30 @@ def tours(request):
     else:
         data = Hotel.objects.all()
     return render(request,'tours.html',{'hotels':data})
+
+@login_required(login_url='signin')
+def book(request,book_name):
+    if not Hotel.objects.filter(name=book_name).exists():
+        return redirect(tours)
+    if request.method == "POST":
+        hotel = Hotel.objects.get(name=book_name)
+        user = CustomUser.objects.get(email=request.user.email)
+        date = request.POST['crono']
+        date_code = dt.datetime.strptime(date, "%Y-%m-%d").date()
+        pnum = int(request.POST['pnum'])
+        if pnum <= 0:
+            messages.info(request,"Invalid person number")
+            return render(request,'book.html',{'book_id':book_name,'pnum':pnum,'crono':date})
+        if date_code <= dt.date.today():
+            messages.info(request,"Invalid date")
+            return render(request,'book.html',{'book_id':book_name,'pnum':pnum,'crono':date})
+        if Booked.objects.filter(user=user,hotel=hotel,book_date=date_code).exists():
+            messages.info(request,"Hotel already booked")
+            return render(request,'book.html',{'book_id':book_name,'pnum':pnum,'crono':date})
+        book_entry = Booked.objects.create(hotel=hotel,user=user,book_date=date_code,pnum=pnum)
+        book_entry.save()
+        return redirect(tours)
+    return render(request,'book.html',{'book_id':book_name})
 
 def addHotel(request):
     if request.method == "POST":

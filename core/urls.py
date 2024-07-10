@@ -9,5 +9,6 @@ urlpatterns = [
     path('tours/',views.tours,name='tours'),
     path('profile/',views.profile,name='profile'),
     path('changepass/',views.changepass,name='changepass'),
-    path('addHotel/',views.addHotel,name='changepass')
+    path('addHotel/',views.addHotel,name='changepass'),
+    path('book/<str:book_name>/',views.book,name='book')
 ]
