@@ -45,3 +45,4 @@ class Booked(models.Model):
 
     def __str__(self):
         return self.user.username + " -> " + self.hotel.name + "@" + str(self.book_date)
+

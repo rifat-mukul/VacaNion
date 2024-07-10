@@ -149,12 +149,6 @@ def signin(request):
                 print(user)
             else:
                 user = None
-            
-
-
-
-
-
         if user is not None:
             login(request,user)
             return redirect(tours)
