@@ -31,7 +31,7 @@ class Hotel(models.Model):
     place = models.CharField(max_length=20,blank=True,null=True)
     name = models.CharField(max_length=20,blank=True,null=True)
     price = models.IntegerField()
-    rating= models.IntegerField()
+    rating= models.FloatField()
     hotelimg = models.ImageField(upload_to="hotelimg",default="blank-hotel-picture.png")
 
     def __str__(self):

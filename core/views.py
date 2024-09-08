@@ -181,3 +181,22 @@ def changepass(request):
         currentpass = request.POST['current-password']
         # user = CustomUser.objects.get(email = email)
     return render(request,'changepass.html')
+
+
+#by mukul
+
+def tours(request):
+
+    search_query = request.GET.get('search', '')
+
+    if search_query:
+        tours = Hotel.objects.filter(place__icontains=search_query) | Hotel.objects.filter(name__icontains=search_query)
+    else:
+        tours = Hotel.objects.all()
+
+    context = {
+        'tours': tours,
+        'search_query': search_query  
+    }
+
+    return render(request, 'tours.html', context)
