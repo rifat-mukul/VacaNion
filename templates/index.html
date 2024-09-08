@@ -1,26 +1,17 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vacanion</title>
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
-</head>
-<body>
-    <div class="container">
-            <h1>VacaNion</h1>
-            <h3>A place to manage all your vacation with ease</h3>
-            <form action="" method="POST">
-                {% csrf_token %}
-				<button type="button"><a href="{% url 'signup' %}">Sign Up</a></button>
-				<br>
-				<br>
-				<button type="button"><a href="{% url 'signin' %}">Sign In</a></button>
-                <br>
-                <br>
-				<button type="button"><a href="{% url 'signout' %}">Sign out</a></button>
-        </div>
-    </div>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}VacaNion - Home{% endblock %}
+
+{% block content %}
+    <h1>VacaNion</h1>
+    <h3>A place to manage all your vacation with ease</h3>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary"><a href="{% url 'signup' %}" class="text-white text-decoration-none">Sign Up</a></button>
+        <br><br>
+        <button type="submit" class="btn btn-primary"><a href="{% url 'signin' %}" class="text-white text-decoration-none">Sign In</a></button>
+        <br><br>
+        <button type="submit" class="btn btn-primary"><a href="{% url 'signout' %}" class="text-white text-decoration-none">Sign Out</a></button>
+    </form>
+{% endblock %}
+
