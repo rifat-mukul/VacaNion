@@ -36,7 +36,7 @@
                     <td>{{ tour.name }}</td>
                     <td>${{ tour.price }}</td>
                     <td>{{ tour.rating }}</td>
-                    <td><button type="button" class="btn btn-outline-success">Book</button></td>
+                    <td><a href="{% url 'book' tour.name %}" type="button" class="btn btn-outline-success">Book</a></td>
                 </tr>
                 {% endfor %}
             {% else %}

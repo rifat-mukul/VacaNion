@@ -2,7 +2,9 @@ from django.shortcuts import render,redirect
 from .models import CustomUser, Hotel, Booked
 from django.contrib import messages
 from django.contrib.auth import login,get_user_model,authenticate
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
+from .forms import ProfileForm
 from django.db.models import Q
 import datetime as dt
 
@@ -163,17 +165,35 @@ def signout(request):
     request.session.flush()
     return redirect(signin)
 
+
 @login_required(login_url='signin')
 def profile(request):
+    errors = {}
+    user = request.user
+
     if request.method == "POST":
-        fname = request.POST["first-name"]
-        lname = request.POST["last-name"]
-        username = request.POST["username"]
-        password = request.POST["password"]
+        updated_data = request.POST.copy()
+        updated_data.update({'username': user.username})
+        form = ProfileForm(updated_data,request.FILES,instance=user)
 
+        last_pass = request.user.password
+        if not form.is_valid():
+            errors = {key:value[0] for key,value in form.errors.items()}
+        elif not check_password(form.cleaned_data['password'],last_pass):
+            errors = {'password': 'did not match'}
+        else:
+            usr = form.save()
+            usr.set_password(form.cleaned_data['password'])
+            usr.save()
+            return redirect(signin)
+    form = ProfileForm(instance=user,initial={"password":""})
 
+    context = {
+        'form': form,
+        'messages': errors
+    }
 
-    return render(request,'profile.html')
+    return render(request,'profile.html',context)
 
 
 def changepass(request):

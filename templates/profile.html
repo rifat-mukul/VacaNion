@@ -1,43 +1,17 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile</title>
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
-    <link rel="stylesheet" href="{% static 'css/profile.js' %}">
-</head>
-<body>
-    <div class="container">
-        <h2>Edit Profile</h2>
-        <form id="edit-profile-form" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="first-name">First Name:</label>
-                <input type="text" id="first-name" name="first-name" required>
-            </div>
-            <div class="form-group">
-                <label for="last-name">Last Name:</label>
-                <input type="text" id="last-name" name="last-name" required>
-            </div>
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group">
-                <label for="profile-image">Profile Image:</label>
-                <input type="file" id="profile-image" name="profile-image">
-            </div>
-            <button type="submit">Save Changes</button>
-        </form>
-        <div>
-            <a href="changepass">change password</a>
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
+<div class="fixed-top">
+	{% extends 'baseform.html' %}
+</div>
+{% block title %} Edit Profile {% endblock %}
+
+{% block header %} Edit your profile {% endblock %}
+
+{% block content %}
+{% csrf_token %}
+{% for field in form %}
+<div class="input-group">
+    {{field.label_tag}}
+    {{field}}
+</div>
+{% endfor %}
+<button type="submit">Save Changes</button>
+{% endblock %}
