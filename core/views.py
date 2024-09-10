@@ -1,19 +1,25 @@
 from django.shortcuts import render,redirect
-from .models import CustomUser, Hotel, Booked
-from django.contrib import messages
-from django.contrib.auth import login,get_user_model,authenticate
+from .models import  Hotel, Booked, Location
+from django.contrib.auth import login,authenticate
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
-from .forms import ProfileForm
+from .forms import ProfileForm, HotelForm, CreateProfile, SignIn, BookForm, ChangePassword
 from django.db.models import Q
-import datetime as dt
-
+from django.shortcuts import get_object_or_404
+from datetime import datetime as dt
 
 
 # Create your views here.
 @login_required(login_url='signin')
 def index(request):
-    return render(request,'index.html')
+    context = {
+        'books' : Booked.objects.filter(user=request.user)
+    }
+    return render(request,'index.html',context)
+
+def test(request):
+    return render(request,'test.html')
+
 
 
 @login_required(login_url='signin')
@@ -35,130 +41,79 @@ def tours(request):
     return render(request,'tours.html',{'hotels':data})
 
 @login_required(login_url='signin')
-def book(request,book_name):
-    if not Hotel.objects.filter(name=book_name).exists():
-        return redirect(tours)
+def book(request,book_id):
+    hotel = get_object_or_404(Hotel,id=book_id)
+    print(hotel)
     if request.method == "POST":
-        hotel = Hotel.objects.get(name=book_name)
-        user = CustomUser.objects.get(email=request.user.email)
-        date = request.POST['crono']
-        date_code = dt.datetime.strptime(date, "%Y-%m-%d").date()
-        pnum = int(request.POST['pnum'])
-        if pnum <= 0:
-            messages.info(request,"Invalid person number")
-            return render(request,'book.html',{'book_id':book_name,'pnum':pnum,'crono':date})
-        if date_code <= dt.date.today():
-            messages.info(request,"Invalid date")
-            return render(request,'book.html',{'book_id':book_name,'pnum':pnum,'crono':date})
-        if Booked.objects.filter(user=user,hotel=hotel,book_date=date_code).exists():
-            messages.info(request,"Hotel already booked")
-            return render(request,'book.html',{'book_id':book_name,'pnum':pnum,'crono':date})
-        book_entry = Booked.objects.create(hotel=hotel,user=user,book_date=date_code,pnum=pnum)
-        book_entry.save()
-        return redirect(tours)
-    return render(request,'book.html',{'book_id':book_name})
+        form = BookForm(request.POST,request.FILES)
+
+        if form.is_valid():
+            booking = form.save(commit=False)
+            booking.user = request.user
+            booking.hotel = hotel
+            booking.save()
+    else:
+        form = BookForm()
+
+    context = {
+        'form': form,
+        'action': 'Book',
+        'name' : 'Book Hotel',
+    }
+
+    return render(request,'baseform.html',context)
 
 def addHotel(request):
     if request.method == "POST":
-        name = request.POST['name']
-        place = request.POST['place']
-        price = request.POST['price']
-        review = request.POST['review']
+        form = HotelForm(request.POST,request.FILES)
 
-        info = {
-                'name' : name,
-                'price' : price,
-                'review' : review,
-                'place' : place
-                }
-        
-        review = int(review)
-        price = int(price)
-
-        if review > 10 or review < 0:
-            messages.info(request,"Bad reivew")
-            return render(request,'addHotel.html',info)
-        if price < 0:
-            messages.info(request,"Bad price")
-            return render(request,'addHotel.html',info)
-        if Hotel.objects.filter(name = name).exists():
-            messages.info(request,"Hotel name exists")
-            return render(request,'addHotel.html',info)
-        hotel = Hotel.objects.create(name = name,place = place,rating=review,price=price)
-        hotel.save()
-        return render(request,'addHotel.html',info)
+        if form.is_valid():
+            form.save()
     else:
-        return render(request,'addHotel.html')
+        form = HotelForm()
+
+    context = {
+        'form': form,
+        'action': 'Add',
+        'name' : 'Add hotel',
+    }
+
+    return render(request,'baseform.html',context)
+
 
 def signup(request):
-    if request.method == "POST":
-        email = request.POST['email']
-        username = request.POST['username']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-
-        info  = {
-            "email":email,
-            'username': username,
-            'password':password1,
-            'password2':password2
-        }
-
-        if password1 != password2:
-            messages.info(request,"Password do not match")
-        
-            return render(request,'signup.html',info)
-        elif len(password1) <8:
-            messages.info(request,"password should contain at least 8 character")
-
-            return render(request,'signup.html',info)
-        
-        else:
-            if CustomUser.objects.filter(email = email).exists():
-                messages.info(request,'User email already exists')
-                return redirect('signup')
-            if CustomUser.objects.filter(username = username):
-
-                messages.info(request,'Username already exists')
-                return redirect('signup')
-            user = CustomUser.objects.create_user(email = email,username=username,password = password1)
-            user.save()
-
-            return redirect(index)
-
+    if request.method == 'POST':
+        form = CreateProfile(request.POST,request.FILES)
+        if form.is_valid():
+            usr = form.save()
+            usr.set_password(form.cleaned_data['password'])
+            usr.save()
+            return redirect(signin)
     else:
-        return render(request,'signup.html') #need  to create index def
+        form = CreateProfile()
+    context = {
+        'form': form,
+        'action': 'Sign up',
+        'name' : 'Sign Up',
+    }
+    return render(request,'baseform.html',context)
 
 def signin(request):
-    if request.method == "POST":
-        email = request.POST['email']
-        password = request.POST['password']
-
-        # user = authenticate(request,email=email,password=password)
-
-
-
-        if "@" in email:
-            user = authenticate(request,email=email,password=password)
-        else:
-            if CustomUser.objects.filter(username = email).exists():
-
-                user_obj = CustomUser.objects.filter(username = email)
-                for user in user_obj:
-                    access = user.email
-
-                user = authenticate(request,email = access,password=password)
-                print(user)
-            else:
-                user = None
-        if user is not None:
+    if request.method == 'POST':
+        form = SignIn(request.POST,request.FILES)
+        if form.is_valid():
+            userdata = form.cleaned_data['user']
+            user = authenticate(request,email = userdata.email,password=form.cleaned_data['password'])
             login(request,user)
-            return redirect(tours)
-        else:
-            messages.info(request, 'Credential Invalid')
-            return redirect('signin')
+            return redirect(index)
     else:
-        return render(request,'signin.html')
+        form = SignIn()
+    context = {
+        'form': form,
+        'action': 'Sign up',
+        'name' : 'Sign Up',
+    }
+    return render(request,'baseform.html',context)
     
 @login_required(login_url='signin')
 def signout(request):
@@ -190,17 +145,28 @@ def profile(request):
 
     context = {
         'form': form,
-        'messages': errors
+        'messages': errors,
+        'action': 'Save Changes',
+        'name' : 'Edit Profiler',
     }
 
-    return render(request,'profile.html',context)
+    return render(request,'baseform.html',context)
 
 
 def changepass(request):
-    if request.method == "POST":
-        currentpass = request.POST['current-password']
-        # user = CustomUser.objects.get(email = email)
-    return render(request,'changepass.html')
+    if request.method == 'POST':
+        form = ChangePassword(request.POST,request.FILES,user=request.user,)
+        if form.is_valid():
+            
+            print(form.cleaned_data)
+    else:
+        form = ChangePassword(user=request.user)
+    context = {
+        'form': form,
+        'action': 'Change password',
+        'name' : 'Change Password',
+    }
+    return render(request,'baseform.html',context)
 
 
 #by mukul
