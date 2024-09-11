@@ -50,3 +50,12 @@ class Booked(models.Model):
 
     def __str__(self):
         return self.user.username + " -> " + self.hotel.name + "@" + str(self.book_date)
+class ReviewRatings(models.Model):
+    user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    hotel = models.ForeignKey(Hotel,on_delete=models.CASCADE)
+    ratings = models.FloatField()
+    review = models.TextField()
+
+
+    def __str__(self):
+            return f"{self.user.username} -> {self.hotel.name}: {self.ratings}/5 - {self.review}"
