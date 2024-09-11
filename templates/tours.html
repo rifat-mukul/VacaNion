@@ -1,49 +1,28 @@
-<div class="fixed-top">
-	{% extends 'base.html' %}
-</div>
 
-
-{% block title %}Tours{% endblock %}
-
+{% extends 'base.html' %}
+{% block title %}List of Tours{% endblock %}
 {% block content %}
-    <h2>Tours</h2>
-    <form method="get" action="" class="d-flex mb-4">
-        <input 
-            type="text" 
-            name="search" 
-            class="form-control me-2" 
-            placeholder="Search for places or hotel names..." 
-            value="{{ search_query }}"
-            style="max-width: 400px;">
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Place</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Rating</th>  
-                <th>Booking</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if tours %}
-                {% for tour in tours %}
-                <tr>
-                    <td>{{ tour.place }}</td>
-                    <td>{{ tour.name }}</td>
-                    <td>${{ tour.price }}</td>
-                    <td>{{ tour.rating }}</td>
-                    <td><a href="{% url 'book' tour.name %}" type="button" class="btn btn-outline-success">Book</a></td>
-                </tr>
-                {% endfor %}
-            {% else %}
-            <tr>
-                <td colspan="5">No hotels available.</td>
-            </tr>
-            {% endif %}
-        </tbody>
-    </table>
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Place</th>
+        <th scope="col">Rating</th>
+        <th scope="col">Price</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tour in tours %}
+      <tr>
+        <th scope="row">{{ tour.id }}</th>
+        <td>{{ tour.place }}</td>
+        <td>{{ tour.rating }}</td>
+        <td>{{ tour.price }}</td>
+        <td><a href="{% url 'book' tour.id %}" class="btn btn-primary">Book</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

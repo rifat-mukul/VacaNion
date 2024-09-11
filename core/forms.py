@@ -1,7 +1,7 @@
 from typing import Any, Mapping
-from django.forms import ModelForm, TextInput, Select, PasswordInput, CharField, Form, CharField, DateInput, NumberInput, DateField, FileInput, ImageField
+from django.forms import ModelForm, TextInput, Select, PasswordInput, CharField, Form, CharField, DateInput, NumberInput, DateField, FileInput, ImageField, HiddenInput
 from django.forms.renderers import BaseRenderer
-from .models import CustomUser, Hotel, Booked
+from .models import CustomUser, Hotel, Booked, ChatTable
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import check_password
 
@@ -109,3 +109,11 @@ class SignIn(Form):
 
         self.cleaned_data['user'] = user
         return usrpass
+
+class ChatForm(ModelForm):
+    class Meta:
+        model = ChatTable
+
+        fields = ['text']
+    
+    

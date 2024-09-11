@@ -11,4 +11,5 @@ urlpatterns = [
     path('changepass/',views.changepass,name='changepass'),
     path('addHotel/',views.addHotel,name='addhotel'),
     path('book/<int:book_id>/',views.book,name='book'),
+    path('chat/<int:book_id>/',views.chat,name='chat'),
 ]

@@ -1,17 +1,11 @@
-<div class="fixed-top">
-	{% extends 'baseform.html' %}
-</div>
-{% block title %} Edit Profile {% endblock %}
-
-{% block header %} Edit your profile {% endblock %}
-
+{% extends 'base.html' %}
 {% block content %}
-{% csrf_token %}
-{% for field in form %}
-<div class="input-group">
-    {{field.label_tag}}
-    {{field}}
-</div>
-{% endfor %}
-<button type="submit">Save Changes</button>
+{% load crispy_forms_tags %} 
+
+<form action="" method="POST" class="" enctype="multipart/form-data">
+    <h2>Edit Profile</h2>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button class="btn btn-primary" type="submit">Save Changes</button>
+</form>
 {% endblock %}

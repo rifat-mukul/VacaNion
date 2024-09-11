@@ -38,9 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_bootstrap5',
+    'crispy_forms',
     'core',
 ]
 
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
 AUTH_USER_MODEL = 'core.CustomUser'
 
 MIDDLEWARE = [

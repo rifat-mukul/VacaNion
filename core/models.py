@@ -38,6 +38,7 @@ class Hotel(models.Model):
     price = models.IntegerField()
     rating= models.FloatField()
     hotelimg = models.ImageField(upload_to="hotelimg",default="blank-hotel-picture.png")
+    officer = models.ForeignKey(CustomUser,on_delete=models.CASCADE,limit_choices_to={'is_staff': True})
 
     def __str__(self):
         return self.name
@@ -50,3 +51,8 @@ class Booked(models.Model):
 
     def __str__(self):
         return self.user.username + " -> " + self.hotel.name + "@" + str(self.book_date)
+
+class ChatTable(models.Model):
+    booking = models.ForeignKey(Booked,on_delete=models.CASCADE)
+    text = models.CharField(max_length=1000)
+    sender = models.ForeignKey(CustomUser,on_delete=models.CASCADE)

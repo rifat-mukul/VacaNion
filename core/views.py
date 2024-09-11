@@ -1,9 +1,9 @@
 from django.shortcuts import render,redirect
-from .models import  Hotel, Booked, Location
+from .models import  Hotel, Booked, ChatTable
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
-from .forms import ProfileForm, HotelForm, CreateProfile, SignIn, BookForm, ChangePassword
+from .forms import ProfileForm, HotelForm, CreateProfile, SignIn, BookForm, ChangePassword, ChatForm
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from datetime import datetime as dt
@@ -20,12 +20,39 @@ def index(request):
 def test(request):
     return render(request,'test.html')
 
+@login_required(login_url='signin')
+def chat(request,book_id):
+    booking = get_object_or_404(Booked,id=book_id)
+    if request.method == "POST":
+        form = ChatForm(request.POST,request.FILES,initial={"booking":booking,"sender":request.user})
+        #print(form.errors)
+        if form.is_valid():
+            txt = form.save(commit=False)
+            txt.booking = booking
+            txt.sender = request.user
+            txt.save()
+
+    else:
+        form = ChatForm(initial={"booking":booking,"sender":request.user})
+
+
+    texts = ChatTable.objects.filter(booking=booking)
+
+    texts.reverse()
+
+
+    context = {
+        'form' : form,
+        'name' : booking.hotel.name,
+        'action' : 'Send',
+        'chat' : texts,
+    }
+    return render(request,'chat.html',context)
 
 
 @login_required(login_url='signin')
 def tours(request):
     if request.method == "POST":
-        print(request.POST)
         if request.POST['bookit'] is not None:
             name = request.POST['bookit']
             print('to book')

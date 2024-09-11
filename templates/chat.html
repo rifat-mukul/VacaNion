@@ -3,6 +3,10 @@
 {% load crispy_forms_tags %} 
 {% block content %}
 <h2 class="mb-3">{{name}}</h2>
+<div class="card m-1 chatbox p-2">
+    <p class="">Hello riad</p>
+    <p class="text-end">Hello world</p>
+</div>
 <form action="" method="POST" class="" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form|crispy }}
