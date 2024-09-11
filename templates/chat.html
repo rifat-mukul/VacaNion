@@ -6,9 +6,9 @@
 <div class="card m-1 chatbox p-2">
     {% for text in chat %}
     {% if text.sender == request.user %}
-    <p class="">{{text.text}}</p>
-    {% else %}
     <p class="text-end">{{text.text}}</p>
+    {% else %}
+    <p class="">{{text.text}}</p>
     {% endif %}
     {% endfor %}
 </div>
