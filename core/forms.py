@@ -39,7 +39,7 @@ class HotelForm(ModelForm):
     
     class Meta:
         model = Hotel
-        fields = '__all__'
+        fields = ['place','name','price','rating','hotelimg']
         
     
         widgets = {

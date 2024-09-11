@@ -12,8 +12,14 @@ from datetime import datetime as dt
 # Create your views here.
 @login_required(login_url='signin')
 def index(request):
+    if not request.user.is_staff:
+        shows = Booked.objects.filter(user=request.user)
+    else:
+        hotels = Hotel.objects.filter(officer=request.user)
+        print(hotels)
+        shows = Booked.objects.filter(hotel__in=hotels)
     context = {
-        'books' : Booked.objects.filter(user=request.user)
+        'books' : shows,
     }
     return render(request,'index.html',context)
 
@@ -95,7 +101,10 @@ def addHotel(request):
         form = HotelForm(request.POST,request.FILES)
 
         if form.is_valid():
-            form.save()
+            usr = form.save(commit=False)
+            usr.officer = request.user
+            usr.save()
+            return redirect(index)
     else:
         form = HotelForm()
 
