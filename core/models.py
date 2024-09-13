@@ -66,7 +66,7 @@ class ChatTable(models.Model):
     text = models.CharField(max_length=1000)
     sender = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
 
-class ReviewRatings(models.Model):
+class ReviewRating(models.Model):
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
     hotel = models.ForeignKey(Hotel,on_delete=models.CASCADE)
     ratings = models.FloatField()
