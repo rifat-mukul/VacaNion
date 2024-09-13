@@ -1,0 +1,70 @@
+
+{% extends 'base.html' %}
+{% block title %}List of Tours{% endblock %}
+{% block content %}
+
+<div class="chartbox">
+  <canvas id="mcx"></canvas>
+  <p>Graph represention number of bookings each month</p>
+  <br><br>
+  <canvas id="uscx"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+  const mcx = document.getElementById('mcx');
+  const uscx = document.getElementById('uscx');
+
+  
+  mcdata = {{month_count}};
+  us_ratio_data = {{us_ratio|safe}};
+  console.log("");
+  
+  
+  
+
+  new Chart(mcx, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(mcdata),
+      datasets: [{
+        label: 'Booking per month',
+        data: Object.values(mcdata),
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+  new Chart(uscx, {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(us_ratio_data),
+      datasets: [{
+        label: 'Booking per month',
+        data: Object.values(us_ratio_data),
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      radius: "50%"
+    }
+  });
+
+  
+</script>
+
+
+{% endblock %}

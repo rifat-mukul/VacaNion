@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import  Hotel, Booked, ChatTable
+from .models import  Hotel, Booked, ChatTable, CustomUser
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
@@ -25,6 +25,22 @@ def index(request):
 
 def test(request):
     return render(request,'test.html')
+
+@login_required(login_url='signin')
+def analytics(request):
+    month_count = {(id+1):Booked.objects.filter(book_date__month=(id+1)).count()  for  id in range(12)}
+    user_staff_radio = {}
+    user_staff_radio['user'] = CustomUser.objects.filter(is_staff=False).count()
+    user_staff_radio['staff'] = CustomUser.objects.filter(is_staff=True).count()
+
+    print(user_staff_radio)
+
+    context = {
+        "month_count": month_count,
+        "us_ratio"   : user_staff_radio,
+    }
+
+    return render(request,"analytics.html",context)
 
 @login_required(login_url='signin')
 def chat(request,book_id):
