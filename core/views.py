@@ -33,8 +33,6 @@ def analytics(request):
     user_staff_radio['user'] = CustomUser.objects.filter(is_staff=False).count()
     user_staff_radio['staff'] = CustomUser.objects.filter(is_staff=True).count()
 
-    print(user_staff_radio)
-
     context = {
         "month_count": month_count,
         "us_ratio"   : user_staff_radio,

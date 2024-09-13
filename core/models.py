@@ -8,7 +8,7 @@ from datetime import datetime
 class CustomUser(AbstractBaseUser,PermissionsMixin,models.Model):
     email = models.EmailField(max_length=100,unique=True,primary_key = True)
     username = models.CharField(max_length=100,unique=True)
-    profileimg = models.ImageField(upload_to="profileimg",default="blank-profile-picture.png")
+    profileimg = models.ImageField(upload_to="profileimg",default="blank-profile-picture.png",blank=True)
     password = models.CharField(max_length = 100)
     first_name = models.CharField(max_length=20,blank=True,null=True)
     last_name = models.CharField(max_length=20,blank=True,null=True)
@@ -51,15 +51,6 @@ class Booked(models.Model):
 
     def __str__(self):
         return self.user.username + " -> " + self.hotel.name + "@" + str(self.book_date)
-class ReviewRatings(models.Model):
-    user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-    hotel = models.ForeignKey(Hotel,on_delete=models.CASCADE)
-    ratings = models.FloatField()
-    review = models.TextField()
-
-
-    def __str__(self):
-            return f"{self.user.username} -> {self.hotel.name}: {self.ratings}/5 - {self.review}"
 
 class ChatTable(models.Model):
     booking = models.ForeignKey(Booked,on_delete=models.CASCADE)
