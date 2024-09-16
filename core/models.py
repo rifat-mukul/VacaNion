@@ -36,7 +36,7 @@ class Hotel(models.Model):
     place = models.ForeignKey(Location, on_delete=models.CASCADE)
     name = models.CharField(max_length=20,blank=True,null=True)
     price = models.IntegerField()
-    rating= models.FloatField()
+    rating= models.FloatField(default=10)
     hotelimg = models.ImageField(upload_to="hotelimg",default="blank-hotel-picture.png")
     officer = models.ForeignKey(CustomUser,on_delete=models.CASCADE,limit_choices_to={'is_staff': True})
 
@@ -62,6 +62,18 @@ class ReviewRating(models.Model):
     ratings = models.FloatField()
     review = models.TextField()
 
+    def save(self,*args,**keargs):
+        res = super().save(*args,**keargs)
+        reviews = ReviewRating.objects.filter(hotel__hotel=self.hotel.hotel)
+        n = reviews.count()
+        sum = 0
+        for review in reviews:
+            sum += review.ratings
+        print(sum/n,"========",reviews)
+        tpl = self.hotel.hotel
+        tpl.rating = sum/n
+        tpl.save()
+
 
     def __str__(self):
-            return f"{self.hotel} -> {self.ratings}/5 - {self.review}"
+            return f"{self.hotel} -> {self.ratings} - {self.review}"

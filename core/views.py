@@ -3,7 +3,8 @@ from .models import  Hotel, Booked, ChatTable, CustomUser
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
-from .forms import ProfileForm, HotelForm, CreateProfile, SignIn, BookForm, ChangePassword, ChatForm
+from django.http import HttpResponse
+from .forms import ProfileForm, HotelForm, CreateProfile, SignIn, BookForm, ChangePassword, ChatForm, SubmitReview
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from datetime import datetime as dt
@@ -25,6 +26,39 @@ def index(request):
 
 def test(request):
     return render(request,'test.html')
+
+@login_required(login_url='signin')
+def review(request,book_id):
+
+    ins = get_object_or_404(Booked,pk=book_id)
+    if request.method == "POST":
+        form = SubmitReview(request.POST,request.FILES,initial={"hotel":ins})
+        if form.is_valid():
+            tpl = form.save(commit=False)
+            tpl.hotel = ins
+            tpl.save()
+            """
+            txt.booking = booking
+            txt.sender = request.user
+            txt.save()"""
+    else:
+        form = SubmitReview(instance=ins)
+
+    context = {
+        'form': form,
+        'action': 'Submit',
+        'name' : f'Review of hotel {ins.hotel.name}',
+    }
+
+    return render(request,"baseform.html",context)
+
+@login_required(login_url='signin')
+def deleteBooking(request,book_id):
+    booking = get_object_or_404(Booked,id=book_id)
+    booking.delete()
+    return HttpResponse(status=204)
+    
+
 
 @login_required(login_url='signin')
 def analytics(request):

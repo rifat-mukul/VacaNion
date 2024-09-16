@@ -12,5 +12,7 @@ urlpatterns = [
     path('addHotel/',views.addHotel,name='addhotel'),
     path('book/<int:book_id>/',views.book,name='book'),
     path('chat/<int:book_id>/',views.chat,name='chat'),
-    path('analytics/',views.analytics,name="analytics")
+    path('analytics/',views.analytics,name="analytics"),
+    path('reviw/<int:book_id>',views.review,name="review"),
+    path('delete/<int:book_id>',views.deleteBooking,name="dBook"),
 ]
