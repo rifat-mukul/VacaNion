@@ -19,9 +19,13 @@ class ProfileForm(ModelForm):
 class CreateProfile(ModelForm):
     confirm_password = CharField(widget=PasswordInput())
 
+    def __init__(self):
+        super().__init__()
+        self.fields['is_staff'].label = " Reservation Officer"
+
     class Meta:
         model = CustomUser
-        fields = ['first_name','last_name','email','username','profileimg','password']
+        fields = ['first_name','last_name','email','username','is_staff','profileimg','password']
 
         widgets = {
             'password' : PasswordInput(),

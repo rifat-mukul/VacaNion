@@ -1,6 +1,6 @@
 
 {% extends 'base.html' %}
-{% block title %}List of Tours{% endblock %}
+{% block title %}Analytics{% endblock %}
 {% block content %}
 
 <div class="chartbox">
@@ -48,7 +48,7 @@
     data: {
       labels: Object.keys(us_ratio_data),
       datasets: [{
-        label: 'Booking per month',
+        label: 'Ratio of officer and user',
         data: Object.values(us_ratio_data),
         borderWidth: 1
       }]

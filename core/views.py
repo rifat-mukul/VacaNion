@@ -31,7 +31,7 @@ def analytics(request):
     month_count = {(id+1):Booked.objects.filter(book_date__month=(id+1)).count()  for  id in range(12)}
     user_staff_radio = {}
     user_staff_radio['user'] = CustomUser.objects.filter(is_staff=False).count()
-    user_staff_radio['staff'] = CustomUser.objects.filter(is_staff=True).count()
+    user_staff_radio['officer'] = CustomUser.objects.filter(is_staff=True).count()
 
     context = {
         "month_count": month_count,
