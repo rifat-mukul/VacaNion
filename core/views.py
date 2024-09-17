@@ -3,7 +3,7 @@ from .models import  Hotel, Booked, ChatTable
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
-from .forms import ProfileForm, HotelForm, CreateProfile, SignIn, BookForm, ChangePassword, ChatForm
+from .forms import ProfileForm, HotelForm, CreateProfile, SignIn, BookForm, ChangePassword, ChatForm, Reviewform
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from datetime import datetime as dt
@@ -107,9 +107,11 @@ def addHotel(request):
             return redirect(index)
     else:
         form = HotelForm()
+        rating = Reviewform()
 
     context = {
         'form': form,
+        'review':rating,
         'action': 'Add',
         'name' : 'Add hotel',
     }

@@ -1,7 +1,7 @@
 from typing import Any, Mapping
 from django.forms import ModelForm, TextInput, Select, PasswordInput, CharField, Form, CharField, DateInput, NumberInput, DateField, FileInput, ImageField, HiddenInput
 from django.forms.renderers import BaseRenderer
-from .models import CustomUser, Hotel, Booked, ChatTable
+from .models import CustomUser, Hotel, Booked, ChatTable, ReviewRating
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import check_password
 
@@ -47,8 +47,8 @@ class HotelForm(ModelForm):
 
     def clean_rating(self):
         rating = self.cleaned_data.get('rating')
-        if rating < 0 or rating > 10:
-            raise ValidationError('rating must be between 0 and 10.')
+        if rating < 0 or rating > 5:
+            raise ValidationError('rating must be between 0 and 5.')
         return rating
 
 class BookForm(ModelForm):
@@ -115,5 +115,11 @@ class ChatForm(ModelForm):
         model = ChatTable
 
         fields = ['text']
+    
+class Reviewform(ModelForm):
+    class Meta:
+        model = ReviewRating
+
+        fields = ['ratings']
     
     
