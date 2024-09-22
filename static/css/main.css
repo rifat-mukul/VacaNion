@@ -16,3 +16,20 @@
 .chatbox{
     width: 25vw;
 }
+
+body.bg-dark {
+    background-color: #343a40 !important;
+}
+
+body.bg-light {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+}
+
+.text-dark {
+    color: #212529 !important;
+}
+
+.text-light {
+    color: #ffffff !important;
+}
