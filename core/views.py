@@ -1,10 +1,10 @@
 from django.shortcuts import render,redirect
-from .models import  Hotel, Booked, ChatTable, CustomUser
+from .models import  Hotel, Booked, ChatTable, CustomUser, ReviewRating
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from .forms import ProfileForm, HotelForm, CreateProfile, SignIn, BookForm, ChangePassword, ChatForm, SubmitReview
+from .forms import ProfileForm, HotelForm, CreateProfile, SignIn, BookForm, ChangePassword, ChatForm, SubmitReview, UserTid, OfficerTid
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from datetime import datetime as dt
@@ -26,6 +26,42 @@ def index(request):
 
 def test(request):
     return render(request,'test.html')
+
+@login_required(login_url='signin')
+def reviewPage(request,hotel_id):
+    ins = get_object_or_404(Hotel,id=hotel_id)
+    context = {
+        'reviews': ReviewRating.objects.filter(hotel__hotel=ins),
+        'hotel' : ins,
+    }
+    return render(request,"review.html",context)
+
+@login_required(login_url='signin')
+def makePayment(request,book_id):
+
+    ins = get_object_or_404(Booked,pk=book_id)
+
+    if request.user.is_staff:
+        former = OfficerTid
+    else:
+        former = UserTid
+
+    if request.method == "POST":
+        form = former(request.POST,request.FILES,instance=ins)
+        if form.is_valid():
+            form.save()
+            return redirect(index)
+    else:
+        form = former(instance=ins)
+
+    context = {
+        'form': form,
+        'action': 'Submit',
+        'name' : f'Payment for {ins}',
+    }
+
+    return render(request,"baseform.html",context)
+
 
 @login_required(login_url='signin')
 def review(request,book_id):

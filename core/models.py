@@ -48,6 +48,8 @@ class Booked(models.Model):
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
     book_date = models.DateField(default = datetime.now)  
     pnum = models.IntegerField(default=1)
+    userTid = models.IntegerField(default=0)
+    officerTid = models.IntegerField(default=0)
 
     def __str__(self):
         return self.user.username + " -> " + self.hotel.name + "@" + str(self.book_date)

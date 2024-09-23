@@ -27,12 +27,30 @@ class ProfileForm(ModelForm):
 
 class SubmitReview(ModelForm):
 
-    
-
     class Meta:
         model = ReviewRating
         fields = ['ratings','review']
 
+class UserTid(ModelForm):
+
+    def __init__(self,*args,**kewargs):
+        super().__init__(*args,**kewargs)
+        self.fields['userTid'].label = "User Transaction ID"
+
+    class Meta:
+        model = Booked
+        fields = ['userTid']
+
+
+class OfficerTid(ModelForm):
+
+    def __init__(self,*args,**kewargs):
+        super().__init__(*args,**kewargs)
+        self.fields['officerTid'].label = "Officer Transaction ID"
+
+    class Meta:
+        model = Booked
+        fields = ['officerTid']
 
 
 class CreateProfile(ModelForm):
