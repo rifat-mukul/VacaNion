@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}List of Tours{% endblock %}
+{% block content %}
+
+<h2>Reviws of {{hotel.name}}</h2>
+<br>
+{% for review in reviews %}
+<div class="p-2 border rounded reviewBox mb-3">
+    <p>{{review.hotel.user.username}} -> {{review.ratings}}</p>
+    <p>{{review.review}}</p>
+</div>
+{% endfor %}
+
+{% endblock %}

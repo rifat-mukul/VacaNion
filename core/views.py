@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import  Hotel, Booked, ChatTable, CustomUser
+from .models import  Hotel, Booked, ChatTable, CustomUser, ReviewRating
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
@@ -26,6 +26,15 @@ def index(request):
 
 def test(request):
     return render(request,'test.html')
+
+@login_required(login_url='signin')
+def reviewPage(request,hotel_id):
+    ins = get_object_or_404(Hotel,id=hotel_id)
+    context = {
+        'reviews': ReviewRating.objects.filter(hotel__hotel=ins),
+        'hotel' : ins,
+    }
+    return render(request,"review.html",context)
 
 @login_required(login_url='signin')
 def makePayment(request,book_id):

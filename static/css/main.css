@@ -21,6 +21,10 @@
     width: 50vw;
 }
 
+.reviewBox{
+    width: 30vw;
+}
+
 body.bg-dark {
     background-color: #343a40 !important;
 }

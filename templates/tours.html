@@ -10,6 +10,7 @@
         <th scope="col">Rating</th>
         <th scope="col">Price</th>
         <th scope="col"></th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -20,6 +21,7 @@
         <td>{{ tour.rating }}</td>
         <td>{{ tour.price }}</td>
         <td><a href="{% url 'book' tour.id %}" class="btn btn-primary">Book</a></td>
+        <td><a href="{% url 'reviewPage' tour.id %}" class="btn btn-primary">Show Revies</a></td>
       </tr>
       {% endfor %}
     </tbody>

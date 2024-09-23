@@ -12,7 +12,7 @@
       {% if books %}
       {% for book in books %}
       <tr>
-        <th scope="row">{{ book.hotel.name }}</th>
+        <th scope="row">{{ book.user.username }} @ {{ book.hotel.name }}</th>
         <td>{{ book.pnum }}</td>
         <td>{{ book.book_date }}</td>
         <td><a href="{% url 'chat' book.id %}" class="btn btn-primary">Chat</a></td>
@@ -23,9 +23,9 @@
         <td><a class="btn btn-primary" href="{% url 'dBook' book.id %}">Cancel</a></td>
         {% endif %}
         {% if book.userTid != 0 and book.userTid == book.officerTid  %}
-        <td><p class="btn btn-primary">Payment Verified</p></td>
+        <td><p class="btn btn-secondary">Payment Verified</p></td>
         {% else %}
-        <td><a class="btn btn-secondary" href="{% url 'makePayment' book.id %}">Verify Payment</a></td>
+        <td><a class="btn btn-primary" href="{% url 'makePayment' book.id %}">Verify Payment</a></td>
         {% endif %}
       </tr>
       {% endfor %}
