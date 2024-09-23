@@ -2,6 +2,18 @@
 {% block title %}List of Tours{% endblock %}
 {% block content %}
 
+<div method="get" action="" class="d-flex mb-4 w-100">
+  <input 
+      type="text" 
+      name="search" 
+      id="searchBox"
+      class="form-control me-2 fluid" 
+      placeholder="Search for places or hotel names..." 
+      value="{{ search_query }}"
+      style="max-width: 400px;">
+  <button type="submit" class="btn btn-primary">Search</button>
+</div>
+
 <table class="table">
     <thead>
       <tr>
@@ -13,7 +25,7 @@
         <th scope="col"></th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="tableBody">
       {% for tour in tours %}
       <tr>
         <th scope="row">{{ tour.name }}</th>
@@ -26,4 +38,41 @@
       {% endfor %}
     </tbody>
   </table>
+  <script>
+    const searchInput = document.getElementById('searchBox');
+    const tableBody = document.getElementById('tableBody');
+
+    searchInput.addEventListener('input', (event) => {
+      const searchTerm = event.target.value.toLowerCase();
+      const rows = tableBody.getElementsByTagName('tr');
+
+      for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td');
+        const headers = rows[i].getElementsByTagName('th');
+        let found = false;
+
+        for (let j = 0; j < cells.length; j++) {
+          const cellText = cells[j].textContent.toLowerCase();
+          if (cellText.includes(searchTerm)) {
+            found = true;
+            break;
+          }
+        }
+
+        for (let j = 0; j < headers.length; j++) {
+          const headerText = headers[j].textContent.toLowerCase();
+          if (headerText.includes(searchTerm)) {
+            found = true;
+            break;
+          }
+        }
+
+        if (found) {
+          rows[i].style.display = '';
+        } else {
+          rows[i].style.display = 'none';
+        }
+      }
+    });
+  </script>
 {% endblock %}
