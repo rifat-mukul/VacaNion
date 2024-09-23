@@ -10,5 +10,4 @@
 6. Payment Verification (Rifat)
 7. Analytical board (Naimur)
 8. Language Support (Naimur)
-9. Theme Customization (Rifat)
-10. Chat System (Riad)
+9. Chat System (Riad)
