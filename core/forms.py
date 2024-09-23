@@ -16,6 +16,17 @@ class ProfileForm(ModelForm):
             'password' : PasswordInput(),
         }
 
+    def clean_password(self):
+        usrpass = self.cleaned_data.get('password')
+        if not check_password(usrpass,self.instance.password):
+            print("pass fkd")
+            raise ValidationError("password did not match")
+
+        print("passed")
+        return usrpass
+
+
+
 class CreateProfile(ModelForm):
     confirm_password = CharField(widget=PasswordInput())
 

@@ -4,6 +4,7 @@
 {% block content %}
 <h2 class="mb-3">{{name}}</h2>
 <div class="card m-1 chatbox p-2">
+    {% if chat %}
     {% for text in chat %}
     {% if text.sender == request.user %}
     <p class="text-end">{{text.text}}</p>
@@ -11,6 +12,9 @@
     <p class="">{{text.text}}</p>
     {% endif %}
     {% endfor %}
+    {% else %}
+    <p class="text-center">Nothing exists</p>
+    {% endif %}
 </div>
 <form action="" method="POST" class="" enctype="multipart/form-data">
     {% csrf_token %}

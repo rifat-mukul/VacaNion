@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import  Hotel, Booked, ChatTable
+from .models import  Hotel, Booked, ChatTable, CustomUser
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
@@ -27,6 +27,30 @@ def test(request):
     return render(request,'test.html')
 
 @login_required(login_url='signin')
+def deleteBooking(request,book_id):
+    booking = get_object_or_404(Booked,id=book_id)
+    booking.delete()
+    return redirect(index)
+    
+
+
+@login_required(login_url='signin')
+def analytics(request):
+    month_count = {(id+1):Booked.objects.filter(book_date__month=(id+1)).count()  for  id in range(12)}
+    user_staff_radio = {}
+    user_staff_radio['user'] = CustomUser.objects.filter(is_staff=False).count()
+    user_staff_radio['officer'] = CustomUser.objects.filter(is_staff=True).count()
+
+    context = {
+        "month_count": month_count,
+        "us_ratio"   : user_staff_radio,
+    }
+
+    return render(request,"analytics.html",context)
+
+
+
+@login_required(login_url='signin')
 def chat(request,book_id):
     booking = get_object_or_404(Booked,id=book_id)
     if request.method == "POST":
@@ -37,7 +61,7 @@ def chat(request,book_id):
             txt.booking = booking
             txt.sender = request.user
             txt.save()
-
+            form = ChatForm(initial={"booking":booking,"sender":request.user})
     else:
         form = ChatForm(initial={"booking":booking,"sender":request.user})
 
@@ -85,6 +109,7 @@ def book(request,book_id):
             booking.user = request.user
             booking.hotel = hotel
             booking.save()
+            return redirect(index)
     else:
         form = BookForm()
 
@@ -148,8 +173,8 @@ def signin(request):
         form = SignIn()
     context = {
         'form': form,
-        'action': 'Sign up',
-        'name' : 'Sign Up',
+        'action': 'Sign in',
+        'name' : 'Sign In',
     }
     return render(request,'baseform.html',context)
     
@@ -161,7 +186,6 @@ def signout(request):
 
 @login_required(login_url='signin')
 def profile(request):
-    errors = {}
     user = request.user
 
     if request.method == "POST":
@@ -170,20 +194,16 @@ def profile(request):
         form = ProfileForm(updated_data,request.FILES,instance=user)
 
         last_pass = request.user.password
-        if not form.is_valid():
-            errors = {key:value[0] for key,value in form.errors.items()}
-        elif not check_password(form.cleaned_data['password'],last_pass):
-            errors = {'password': 'did not match'}
-        else:
+        if form.is_valid():
             usr = form.save()
             usr.set_password(form.cleaned_data['password'])
             usr.save()
             return redirect(signin)
-    form = ProfileForm(instance=user,initial={"password":""})
+    else:
+        form = ProfileForm(instance=user,initial={"password":""})
 
     context = {
         'form': form,
-        'messages': errors,
         'action': 'Save Changes',
         'name' : 'Edit Profiler',
     }
