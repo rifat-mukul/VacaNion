@@ -173,11 +173,9 @@ def addHotel(request):
             return redirect(index)
     else:
         form = HotelForm()
-        rating = Reviewform()
 
     context = {
         'form': form,
-        'review':rating,
         'action': 'Add',
         'name' : 'Add hotel',
     }
