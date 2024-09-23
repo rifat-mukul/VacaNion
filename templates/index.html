@@ -16,11 +16,17 @@
         <td>{{ book.pnum }}</td>
         <td>{{ book.book_date }}</td>
         <td><a href="{% url 'chat' book.id %}" class="btn btn-primary">Chat</a></td>
+        {% if not request.user.is_staff %}
         <td><a href="{% url 'review' book.id %}" class="btn btn-primary">Review</a></td>
+        {% endif %}
         {% if not request.user.is_staff %}
         <td><a class="btn btn-primary" href="{% url 'dBook' book.id %}">Cancel</a></td>
         {% endif %}
-        <td><a class="btn btn-primary" href="">Verify Payment</a></td>
+        {% if book.userTid != 0 and book.userTid == book.officerTid  %}
+        <td><p class="btn btn-primary">Payment Verified</p></td>
+        {% else %}
+        <td><a class="btn btn-secondary" href="{% url 'makePayment' book.id %}">Verify Payment</a></td>
+        {% endif %}
       </tr>
       {% endfor %}
     {% else %}

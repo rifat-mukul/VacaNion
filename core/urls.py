@@ -16,4 +16,5 @@ urlpatterns = [
     path('analytics/',views.analytics,name="analytics"),
     path('reviw/<int:book_id>',views.review,name="review"),
     path('delete/<int:book_id>',views.deleteBooking,name="dBook"),
+    path('makePayment/<int:book_id>',views.makePayment,name="makePayment"),
 ]
