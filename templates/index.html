@@ -3,6 +3,9 @@
 {% block title %}{{request.user.username}}{% endblock %}
 {% block content %}
 
+<script>
+</script>
+
 <table class="table">
     <thead>
     <tbody>
@@ -13,6 +16,7 @@
         <td>{{ book.pnum }}</td>
         <td>{{ book.book_date }}</td>
         <td><a href="{% url 'chat' book.id %}" class="btn btn-primary">Chat</a></td>
+        <td><a href="{% url 'review' book.id %}" class="btn btn-primary">Review</a></td>
         {% if not request.user.is_staff %}
         <td><a class="btn btn-primary" href="{% url 'dBook' book.id %}">Cancel</a></td>
         {% endif %}
@@ -27,3 +31,4 @@
     </tbody>
   </table>
 {% endblock %}
+

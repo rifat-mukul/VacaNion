@@ -17,6 +17,10 @@
     width: 25vw;
 }
 
+.chartbox{
+    width: 50vw;
+}
+
 body.bg-dark {
     background-color: #343a40 !important;
 }
