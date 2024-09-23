@@ -16,23 +16,35 @@ class ProfileForm(ModelForm):
             'password' : PasswordInput(),
         }
 
+
     def clean_password(self):
         usrpass = self.cleaned_data.get('password')
         if not check_password(usrpass,self.instance.password):
             print("pass fkd")
             raise ValidationError("password did not match")
 
-        print("passed")
         return usrpass
+
+class SubmitReview(ModelForm):
+
+    
+
+    class Meta:
+        model = ReviewRating
+        fields = ['ratings','review']
 
 
 
 class CreateProfile(ModelForm):
     confirm_password = CharField(widget=PasswordInput())
 
+    def __init__(self,*args,**kewargs):
+        super().__init__(*args,**kewargs)
+        self.fields['is_staff'].label = " Reservation Officer"
+
     class Meta:
         model = CustomUser
-        fields = ['first_name','last_name','email','username','profileimg','password']
+        fields = ['first_name','last_name','email','username','is_staff','profileimg','password']
 
         widgets = {
             'password' : PasswordInput(),
@@ -46,11 +58,13 @@ class CreateProfile(ModelForm):
             raise ValidationError('passwords did not match.')
 
 class HotelForm(ModelForm):
-    hotelimg = ImageField(widget=FileInput(),label="Hotel image")
+    def __init__(self,*args,**kewargs):
+        super().__init__(*args,**kewargs)
+        self.fields['hotelimg'].label = "Hotel image"
     
     class Meta:
         model = Hotel
-        fields = ['place','name','price','rating','hotelimg']
+        fields = ['place','name','price','hotelimg']
         
     
         widgets = {

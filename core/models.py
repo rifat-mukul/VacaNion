@@ -8,7 +8,7 @@ from datetime import datetime
 class CustomUser(AbstractBaseUser,PermissionsMixin,models.Model):
     email = models.EmailField(max_length=100,unique=True,primary_key = True)
     username = models.CharField(max_length=100,unique=True)
-    profileimg = models.ImageField(upload_to="profileimg",blank=True,default="blank-profile-picture.png")
+    profileimg = models.ImageField(upload_to="profileimg",default="blank-profile-picture.png",blank=True)
     password = models.CharField(max_length = 100)
     first_name = models.CharField(max_length=20,blank=True,null=True)
     last_name = models.CharField(max_length=20,blank=True,null=True)
@@ -36,7 +36,7 @@ class Hotel(models.Model):
     place = models.ForeignKey(Location, on_delete=models.CASCADE)
     name = models.CharField(max_length=20,blank=True,null=True)
     price = models.IntegerField()
-    rating= models.FloatField()
+    rating= models.FloatField(default=10)
     hotelimg = models.ImageField(upload_to="hotelimg",default="blank-hotel-picture.png")
     officer = models.ForeignKey(CustomUser,on_delete=models.CASCADE,limit_choices_to={'is_staff': True})
 
@@ -52,18 +52,28 @@ class Booked(models.Model):
     def __str__(self):
         return self.user.username + " -> " + self.hotel.name + "@" + str(self.book_date)
 
-
 class ChatTable(models.Model):
     booking = models.ForeignKey(Booked,on_delete=models.CASCADE)
     text = models.CharField(max_length=1000)
     sender = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
 
 class ReviewRating(models.Model):
-    user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-    hotel = models.ForeignKey(Hotel,on_delete=models.CASCADE)
+    hotel = models.OneToOneField(Booked,on_delete=models.CASCADE)
     ratings = models.FloatField()
     review = models.TextField()
 
+    def save(self,*args,**keargs):
+        res = super().save(*args,**keargs)
+        reviews = ReviewRating.objects.filter(hotel__hotel=self.hotel.hotel)
+        n = reviews.count()
+        sum = 0
+        for review in reviews:
+            sum += review.ratings
+        print(sum/n,"========",reviews)
+        tpl = self.hotel.hotel
+        tpl.rating = sum/n
+        tpl.save()
+
 
     def __str__(self):
-            return f"{self.user.username} -> {self.hotel.name}: {self.ratings}/5 - {self.review}"
+            return f"{self.hotel} -> {self.ratings} - {self.review}"
